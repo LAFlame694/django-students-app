@@ -26,7 +26,7 @@ def add(request):
             new_gpa = form.cleaned_data['gpa']
 
             new_student = Student(
-                Student_number = new_student_number,
+                student_number = new_student_number,
                 first_name = new_first_name,
                 last_name = new_last_name,
                 email = new_email,
@@ -42,4 +42,20 @@ def add(request):
         form = StudentForm()
     return render(request, 'students/add.html', {
         'form': StudentForm()
+    })
+def edit(request, id):
+    if request.method == 'POST':
+        student = Student.objects.get(pk=id)
+        form = StudentForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            return render(request, 'student/edit.html', {
+                'form': form,
+                'success': True
+            })
+    else:
+        student = Student.objects.get(pk=id)
+        form = StudentForm(instance=student)
+    return render(request, 'student/edit.html', {
+        'form': form
     })
