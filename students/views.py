@@ -34,13 +34,13 @@ def add(request):
                 gpa = new_gpa,
             )
             new_student.save()
-            return render(request, 'students/add.html', {
+            return render(request, 'Students/add.html', {
                 'form': StudentForm(),
                 'success': True,
             })
     else:
         form = StudentForm()
-    return render(request, 'students/add.html', {
+    return render(request, 'Students/add.html', {
         'form': StudentForm()
     })
 def edit(request, id):
@@ -49,13 +49,19 @@ def edit(request, id):
         form = StudentForm(request.POST, instance=student)
         if form.is_valid():
             form.save()
-            return render(request, 'student/edit.html', {
+            return render(request, 'Students/edit.html', {
                 'form': form,
                 'success': True
             })
     else:
         student = Student.objects.get(pk=id)
         form = StudentForm(instance=student)
-    return render(request, 'student/edit.html', {
+    return render(request, 'Students/edit.html', {
         'form': form
     })
+
+def delete(request, id):
+    if request.method == 'POST':
+        student = Student.objects.get(pk=id)
+        student.delete()
+    return HttpResponseRedirect(reverse('index'))
